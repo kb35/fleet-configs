@@ -1,0 +1,24 @@
+name: Fleet Deployment
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up SSH key
+        run: |
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
+          chmod 600 private_key
+          ssh -i private_key -o StrictHostKeyChecking=no user@home-server1 "echo 'SSH connection successful'"
+
+      - name: Run Ansible Playbook
+        run: |
+          ssh -i private_key user@home-server1 "ansible-playbook ~/ansible-playbooks/update_fleet.yml"
