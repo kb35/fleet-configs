@@ -8,3 +8,5 @@
   debug:
     msg: "CI/CD deployment test successful!"
 
+- name: Debug SSH Session
+  uses: mxschmitt/action-tmate@v3
