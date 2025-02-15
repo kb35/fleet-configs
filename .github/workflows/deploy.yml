@@ -21,4 +21,4 @@ jobs:
 
       - name: Run Ansible Playbook
         run: |
-          ssh -i private_key user@home-server1 "ansible-playbook ~/ansible-playbooks/update_fleet.yml"
+          ssh -i private_key keith@192.168.68.61 "ansible-playbook ~/ansible-playbooks/update_fleet.yml"
