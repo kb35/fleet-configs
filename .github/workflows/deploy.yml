@@ -21,4 +21,4 @@ jobs:
 
       - name: Run Ansible Playbook
         run: |
-          ssh -i private_key keith@192.168.68.61 "ansible-playbook ~/ansible-playbooks/update_fleet.yml"
+          ssh -o ConnectTimeout=30 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i private_key keith@192.168.68.61 "ANSIBLE_DEBUG=true ansible-playbook -vvv ~/ansible-playbooks/update_fleet.yml"
