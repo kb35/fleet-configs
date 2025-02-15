@@ -7,3 +7,4 @@
 - name: Test deployment
   debug:
     msg: "CI/CD deployment test successful!"
+
