@@ -17,7 +17,7 @@ jobs:
         run: |
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
           chmod 600 private_key
-          ssh -i private_key -o StrictHostKeyChecking=no user@home-server1 "echo 'SSH connection successful'"
+          ssh -i private_key -o StrictHostKeyChecking=no keith@192.168.68.61 "echo 'SSH connection successful'"
 
       - name: Run Ansible Playbook
         run: |
