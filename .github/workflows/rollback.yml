@@ -16,7 +16,7 @@ jobs:
         run: |
           git checkout HEAD~1
           git push --force origin main
-      
+
       - name: Re-run Ansible playbook
         run: |
           ansible-playbook ~/ansible-playbooks/update_fleet.yml
