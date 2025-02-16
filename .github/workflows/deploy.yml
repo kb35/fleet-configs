@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: self-hosted  # Uses home-server1
 
     steps:
       - name: Checkout repository
@@ -15,16 +15,17 @@ jobs:
 
       - name: Setup SSH Key
         run: |
-          mkdir -p ~/.ssh
-          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan 192.168.68.100 >> ~/.ssh/known_hosts
-          ssh-keyscan 192.168.68.101 >> ~/.ssh/known_hosts
+          mkdir -p "$HOME/.ssh"
+          chmod 700 "$HOME/.ssh"
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > "$HOME/.ssh/id_rsa"
+          chmod 600 "$HOME/.ssh/id_rsa"
+          ssh-keyscan 192.168.68.100 >> "$HOME/.ssh/known_hosts"
+          ssh-keyscan 192.168.68.101 >> "$HOME/.ssh/known_hosts"
 
       - name: Deploy to Home Server
         run: |
-          ssh keith@192.168.68.100 "cd ~/fleet-configs && git pull && ansible-playbook update_fleet.yml"
+          ssh -i "$HOME/.ssh/id_rsa" keith@192.168.68.100 "cd ~/fleet-configs && git pull && ansible-playbook update_fleet.yml"
 
       - name: Deploy to Raspberry Pi
         run: |
-          ssh keith@192.168.68.101 "cd ~/fleet-configs && git pull && ansible-playbook update_fleet.yml"
+          ssh -i "$HOME/.ssh/id_rsa" keith@192.168.68.101 "cd ~/fleet-configs && git pull && ansible-playbook update_fleet.yml"
