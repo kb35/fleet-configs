@@ -1,0 +1,22 @@
+name: Fleet Rollback on Failure
+
+on:
+  workflow_run:
+    workflows: ["Fleet Deployment"]
+    types:
+      - completed
+
+jobs:
+  rollback:
+    if: ${{ github.event.workflow_run.conclusion == 'failure' }}
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout previous stable commit
+        run: |
+          git checkout HEAD~1
+          git push --force origin main
+      
+      - name: Re-run Ansible playbook
+        run: |
+          ansible-playbook ~/ansible-playbooks/update_fleet.yml
