@@ -13,12 +13,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Set up SSH key
+      - name: Setup SSH Key
         run: |
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > private_key
-          chmod 600 private_key
-          ssh -i private_key -o StrictHostKeyChecking=no keith@192.168.68.61 "echo 'SSH connection successful'"
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan 192.168.68.100 >> ~/.ssh/known_hosts
+          ssh-keyscan 192.168.68.101 >> ~/.ssh/known_hosts
 
-      - name: Run Ansible Playbook
+      - name: Deploy to Home Server
         run: |
-          ssh -o ConnectTimeout=30 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -i private_key keith@192.168.68.61 "ANSIBLE_DEBUG=true ansible-playbook -vvv ~/ansible-playbooks/update_fleet.yml"
+          ssh keith@192.168.68.100 "cd ~/fleet-configs && git pull && ansible-playbook update_fleet.yml"
+
+      - name: Deploy to Raspberry Pi
+        run: |
+          ssh keith@192.168.68.101 "cd ~/fleet-configs && git pull && ansible-playbook update_fleet.yml"
