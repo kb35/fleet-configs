@@ -10,6 +10,10 @@ jobs:
     runs-on: self-hosted  # Uses home-server1
 
     steps:
+      - name: Test SSH Connection
+        run: |
+          ssh -vvv -i "$HOME/.ssh/id_rsa" keith@192.168.68.100 "echo SSH Connection Successful"
+
       - name: Checkout repository
         uses: actions/checkout@v3
 
