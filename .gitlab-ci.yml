@@ -1,0 +1,20 @@
+stages:
+  - deploy
+  - rollback
+
+deploy:
+  stage: deploy
+  script:
+    - ansible-playbook ~/ansible-playbooks/update_fleet.yml
+  only:
+    - main
+
+rollback:
+  stage: rollback
+  only:
+    - failure
+  script:
+    - echo "Deployment failed, rolling back..."
+    - git checkout HEAD~1
+    - git push --force origin main
+    - ansible-playbook ~/ansible-playbooks/update_fleet.yml
