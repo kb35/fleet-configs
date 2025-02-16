@@ -13,7 +13,7 @@
 
     - name: Test deployment
       ansible.builtin.debug:
-        msg: "CI/CD deployment test successful!"
+        msg: "CI/CD deployment test successful! 123"
 
   handlers:
     - name: Restart SSH
